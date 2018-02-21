@@ -1,8 +1,7 @@
 inkscape
 libgtk2.0-0
-libatk-1.0
+libatk1.0-0
 libxfixes3
-libatk-1.0
 libxinerama1
 libxi6
 libxrandr2
