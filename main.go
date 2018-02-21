@@ -15,8 +15,6 @@ import (
 
 	"github.com/fatih/structs"
 
-	"os/exec"
-
 	liquid "gopkg.in/osteele/liquid.v1"
 )
 
@@ -59,7 +57,8 @@ func main() {
 	}
 
 	http.HandleFunc("/svg", handleSvg)
-	http.HandleFunc("/png", handlePng)
+	// http.HandleFunc("/png", handlePng)
+
 	http.HandleFunc("/", handleHelp)
 
 	port := os.Getenv("PORT")
@@ -147,62 +146,62 @@ func handleSvg(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handlePng(w http.ResponseWriter, r *http.Request) {
-	binding := parseUrlValues(w, r)
+// func handlePng(w http.ResponseWriter, r *http.Request) {
+// 	binding := parseUrlValues(w, r)
 
-	var buf bytes.Buffer
+// 	var buf bytes.Buffer
 
-	if err := writeSvg(binding, &buf); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+// 	if err := writeSvg(binding, &buf); err != nil {
+// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+// 		return
+// 	}
 
-	svgFile, err := ioutil.TempFile("", "makeconsole-svg-")
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Unable to create svgFile: %v", err.Error()), http.StatusInternalServerError)
-		return
-	}
-	_, err = io.Copy(svgFile, &buf)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Unable to write svgFile: %v", err.Error()), http.StatusInternalServerError)
-		return
-	}
+// 	svgFile, err := ioutil.TempFile("", "makeconsole-svg-")
+// 	if err != nil {
+// 		http.Error(w, fmt.Sprintf("Unable to create svgFile: %v", err.Error()), http.StatusInternalServerError)
+// 		return
+// 	}
+// 	_, err = io.Copy(svgFile, &buf)
+// 	if err != nil {
+// 		http.Error(w, fmt.Sprintf("Unable to write svgFile: %v", err.Error()), http.StatusInternalServerError)
+// 		return
+// 	}
 
-	if err := svgFile.Close(); err != nil {
-		http.Error(w, fmt.Sprintf("Unable to close svgFile: %v", err.Error()), http.StatusInternalServerError)
-		return
-	}
-	defer os.Remove(svgFile.Name())
+// 	if err := svgFile.Close(); err != nil {
+// 		http.Error(w, fmt.Sprintf("Unable to close svgFile: %v", err.Error()), http.StatusInternalServerError)
+// 		return
+// 	}
+// 	defer os.Remove(svgFile.Name())
 
-	pngFile, err := ioutil.TempFile("", "makeconsole-png-")
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Unable to create pngFile: %v", err.Error()), http.StatusInternalServerError)
-		return
-	}
-	if err := pngFile.Close(); err != nil {
-		http.Error(w, fmt.Sprintf("Unable to close pngFile: %v", err.Error()), http.StatusInternalServerError)
-		return
-	}
+// 	pngFile, err := ioutil.TempFile("", "makeconsole-png-")
+// 	if err != nil {
+// 		http.Error(w, fmt.Sprintf("Unable to create pngFile: %v", err.Error()), http.StatusInternalServerError)
+// 		return
+// 	}
+// 	if err := pngFile.Close(); err != nil {
+// 		http.Error(w, fmt.Sprintf("Unable to close pngFile: %v", err.Error()), http.StatusInternalServerError)
+// 		return
+// 	}
 
-	defer os.Remove(pngFile.Name())
+// 	defer os.Remove(pngFile.Name())
 
-	err = exec.Command("inkscape", fmt.Sprintf("--file=%s", svgFile.Name()), fmt.Sprintf("--export-png=%s", pngFile.Name())).Run()
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Unable to call inkscape: %v", err.Error()), http.StatusInternalServerError)
-		return
-	}
+// 	err = exec.Command("inkscape", fmt.Sprintf("--file=%s", svgFile.Name()), fmt.Sprintf("--export-png=%s", pngFile.Name())).Run()
+// 	if err != nil {
+// 		http.Error(w, fmt.Sprintf("Unable to call inkscape: %v", err.Error()), http.StatusInternalServerError)
+// 		return
+// 	}
 
-	f, err := os.Open(pngFile.Name())
-	if err != nil {
-		http.Error(w, fmt.Sprintf("Unable to open png: %v", err.Error()), http.StatusInternalServerError)
-		return
-	}
-	defer f.Close()
+// 	f, err := os.Open(pngFile.Name())
+// 	if err != nil {
+// 		http.Error(w, fmt.Sprintf("Unable to open png: %v", err.Error()), http.StatusInternalServerError)
+// 		return
+// 	}
+// 	defer f.Close()
 
-	w.Header().Set("Content-Type", "image/png")
+// 	w.Header().Set("Content-Type", "image/png")
 
-	io.Copy(w, f)
-}
+// 	io.Copy(w, f)
+// }
 
 func handleHelp(w http.ResponseWriter, r *http.Request) {
 	binding := binding{
@@ -210,8 +209,7 @@ func handleHelp(w http.ResponseWriter, r *http.Request) {
 			"Usage:",
 			"  Call",
 			"",
-			fmt.Sprintf("      %s/svg  or ", *serviceURL),
-			fmt.Sprintf("      %s/png", *serviceURL),
+			fmt.Sprintf("      %s/svg", *serviceURL),
 			"",
 			"With these url parameters:",
 			"  lines=Hello%20World%0AThis%20is%20a%20new%20Line!",
