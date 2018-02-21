@@ -222,7 +222,7 @@ func handleHelp(w http.ResponseWriter, r *http.Request) {
 			"  radius=8         Set a custom radius",
 			"",
 			"Example:",
-			fmt.Sprintf("      %s/svg?lines=Hello%20World", *serviceURL),
+			fmt.Sprintf("      %s/svg?lines=Hello%%20World", *serviceURL),
 			"",
 			"Version 1.0",
 			"Source Code:",
