@@ -1,0 +1,18 @@
+language: go
+
+go:
+  - 1.8.3
+  - 1.9
+
+install:
+  - go get github.com/mattn/goveralls
+  - make setup
+
+script:
+  - $HOME/gopath/bin/goveralls -service=travis-ci
+  - make lint
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change

@@ -1,0 +1,79 @@
+{
+	"ImportPath": "github.com/Eun/makeconsole",
+	"GoVersion": "go1.9",
+	"GodepVersion": "v80",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/davecgh/go-spew/spew",
+			"Comment": "v1.1.0-11-g87df7c6",
+			"Rev": "87df7c60d5820d0f8ae11afede5aa52325c09717"
+		},
+		{
+			"ImportPath": "github.com/fatih/structs",
+			"Comment": "v1.0-15-gebf56d3",
+			"Rev": "ebf56d35bba727c68ac77f56f2fcf90b181851aa"
+		},
+		{
+			"ImportPath": "github.com/osteele/liquid/expressions",
+			"Comment": "v1.2.3-8-gba2ecf9",
+			"Rev": "ba2ecf9542fcbfd163299bcbd2d32481bee2e746"
+		},
+		{
+			"ImportPath": "github.com/osteele/liquid/filters",
+			"Comment": "v1.2.3-8-gba2ecf9",
+			"Rev": "ba2ecf9542fcbfd163299bcbd2d32481bee2e746"
+		},
+		{
+			"ImportPath": "github.com/osteele/liquid/parser",
+			"Comment": "v1.2.3-8-gba2ecf9",
+			"Rev": "ba2ecf9542fcbfd163299bcbd2d32481bee2e746"
+		},
+		{
+			"ImportPath": "github.com/osteele/liquid/render",
+			"Comment": "v1.2.3-8-gba2ecf9",
+			"Rev": "ba2ecf9542fcbfd163299bcbd2d32481bee2e746"
+		},
+		{
+			"ImportPath": "github.com/osteele/liquid/tags",
+			"Comment": "v1.2.3-8-gba2ecf9",
+			"Rev": "ba2ecf9542fcbfd163299bcbd2d32481bee2e746"
+		},
+		{
+			"ImportPath": "github.com/osteele/liquid/values",
+			"Comment": "v1.2.3-8-gba2ecf9",
+			"Rev": "ba2ecf9542fcbfd163299bcbd2d32481bee2e746"
+		},
+		{
+			"ImportPath": "github.com/osteele/tuesday",
+			"Comment": "v1.0.3-1-g3b7c52f",
+			"Rev": "3b7c52f7693058d48530667c214293894fa4c53d"
+		},
+		{
+			"ImportPath": "github.com/pmezard/go-difflib/difflib",
+			"Comment": "v1.0.0",
+			"Rev": "792786c7400a136282c1664665ae0a8db921c6c2"
+		},
+		{
+			"ImportPath": "github.com/stretchr/testify/assert",
+			"Comment": "v1.2.0-4-g87b1dfb",
+			"Rev": "87b1dfb5b2fa649f52695dd9eae19abe404a4308"
+		},
+		{
+			"ImportPath": "github.com/stretchr/testify/require",
+			"Comment": "v1.2.0-4-g87b1dfb",
+			"Rev": "87b1dfb5b2fa649f52695dd9eae19abe404a4308"
+		},
+		{
+			"ImportPath": "gopkg.in/osteele/liquid.v1",
+			"Comment": "v1.2.3",
+			"Rev": "5ebf31a84a3898a15cd8e0cb967b2582890fbc9c"
+		},
+		{
+			"ImportPath": "gopkg.in/yaml.v2",
+			"Rev": "d670f9405373e636a5a2765eea47fac0c9bc91a4"
+		}
+	]
+}
