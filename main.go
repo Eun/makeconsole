@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"flag"
 	"fmt"
 	"html"
@@ -22,6 +23,7 @@ var renderEngine *liquid.Engine
 var templates map[string][]byte
 
 var serviceURL = flag.String("url", "", "service url")
+var noCacheFlag = flag.Bool("nocache", false, "disable cache")
 
 func main() {
 	flag.Parse()
@@ -32,27 +34,22 @@ func main() {
 	})
 
 	renderEngine.RegisterFilter("limitTo", limitTo)
-	templates = make(map[string][]byte)
 
 	files, err := ioutil.ReadDir("./")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	for _, file := range files {
-		if !file.IsDir() && strings.HasSuffix(strings.ToLower(file.Name()), ".svg") {
-			f, err := os.Open(file.Name())
-			if err != nil {
-				log.Fatal(err)
+	if noCacheFlag == nil || *noCacheFlag == false {
+		templates = make(map[string][]byte)
+		for _, file := range files {
+			if !file.IsDir() && strings.HasSuffix(strings.ToLower(file.Name()), ".svg") {
+				name, bytes, err := loadTemplateFromFS(file.Name())
+				if err != nil {
+					log.Panic(err)
+				}
+				templates[name] = bytes
 			}
-
-			var buf bytes.Buffer
-			_, err = io.Copy(&buf, f)
-			if err != nil {
-				log.Fatal(err)
-			}
-			name := file.Name()[:len(file.Name())-4]
-			templates[name] = buf.Bytes()
 		}
 	}
 
@@ -70,9 +67,28 @@ func main() {
 		}
 	}
 
+	log.Printf("Listening on :%s\n", port)
+
 	if err := http.ListenAndServe(":"+port, nil); err != nil {
 		panic(err)
 	}
+}
+
+func loadTemplateFromFS(name string) (string, []byte, error) {
+	if strings.HasSuffix(name, ".svg") {
+		f, err := os.Open(name)
+		if err != nil {
+			return "", nil, err
+		}
+
+		var buf bytes.Buffer
+		_, err = io.Copy(&buf, f)
+		if err != nil {
+			return "", nil, err
+		}
+		return name[:len(name)-4], buf.Bytes(), nil
+	}
+	return "", nil, errors.New("not found")
 }
 
 func limitTo(a []string, maxSize int) (result []string) {
@@ -237,11 +253,24 @@ func handleHelp(w http.ResponseWriter, r *http.Request) {
 }
 
 func writeSvg(binding binding, w io.Writer) error {
-	buf, ok := templates[binding.Template]
-	if !ok {
-		buf, ok = templates["terminal"]
-		binding.Lines = []string{fmt.Sprintf("No such template `%s'", binding.Template)}
-		binding.Width = 0
+	var buf []byte
+	if noCacheFlag == nil || *noCacheFlag == false {
+		var ok bool
+		buf, ok = templates[binding.Template]
+		if !ok {
+			buf, ok = templates["terminal"]
+			if !ok {
+				return errors.New("unable to find default template `terminal'")
+			}
+			binding.Lines = []string{fmt.Sprintf("No such template `%s'", binding.Template)}
+			binding.Width = 0
+		}
+	} else {
+		var err error
+		_, buf, err = loadTemplateFromFS(binding.Template + ".svg")
+		if err != nil {
+			return err
+		}
 	}
 
 	// encode data
